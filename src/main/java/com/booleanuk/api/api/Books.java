@@ -4,6 +4,7 @@ package com.booleanuk.api.api;
 import com.booleanuk.api.Response;
 import com.booleanuk.api.requests.Book;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -49,5 +50,26 @@ public class Books {
             }
         }
         return book != null ? book : Response.notFound("No book found for id: " + id);
+    }
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Object updateBookById(@PathVariable int id, @RequestBody Book book) {
+
+        boolean exists = this.books.stream().anyMatch(b -> b.getId() == id);
+        if (!exists) {
+            return Response.notFound("No book found for id: " + id);
+        }
+
+        for (Book item : this.books) {
+            if (item.getId() == id) {
+                item.setTitle(book.getTitle());
+                item.setAuthor(book.getAuthor());
+                item.setGenre(book.getGenre());
+                item.setNumPages(book.getNumPages());
+            }
+        }
+
+        return book;
     }
 }
