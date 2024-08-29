@@ -41,4 +41,25 @@ public class Students {
         }
         return student != null ? student : Response.notFound("No student with named " + firstName + " exists");
     }
+
+    @PutMapping("/{firstName}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Object updateStudent(@PathVariable String firstName, @RequestBody Student body) {
+        boolean exists = this.students.stream().anyMatch(s -> s.firstName().equals(firstName));
+        if (!exists) {
+            return Response.notFound("No student named " + firstName + " exists");
+        }
+
+        Student updatedStudent = null;
+        for (Student item : this.students) {
+            if (item.firstName().equals(firstName)) {
+                this.students.remove(item);
+
+                updatedStudent = new Student(body.firstName(), body.lastName());
+                this.students.add(updatedStudent);
+                break;
+            }
+        }
+        return updatedStudent;
+    }
 }
