@@ -3,6 +3,7 @@ package com.booleanuk.api.api;
 import com.booleanuk.api.requests.Student;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +29,8 @@ public class Students {
     }
 
     @GetMapping("/{firstName}")
-    public Student getStudentByFirstName(@PathVariable String firstName) {
+    @ResponseStatus(HttpStatus.OK)
+    public Object getStudentByFirstName(@PathVariable String firstName) {
         Student student = null;
         for (Student item : this.students) {
             if (item.firstName().equals(firstName)) {
@@ -36,6 +38,10 @@ public class Students {
                 break;
             }
         }
-        return student;
+
+        String errorMessage = "No student with named " + firstName + " exists";
+        ResponseStatusException error = new ResponseStatusException(HttpStatus.NOT_FOUND, errorMessage);
+
+        return student != null ? student : error;
     }
 }
