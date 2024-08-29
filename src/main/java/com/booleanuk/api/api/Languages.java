@@ -41,4 +41,25 @@ public class Languages {
         }
         return language != null ? language : Response.notFound("No language with name " + name + " exists.");
     }
+
+    @PutMapping("/{name}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Object updateLanguage(@PathVariable String name, @RequestBody Language body) {
+        boolean exists = this.languages.stream().anyMatch(s -> s.getName().equals(name));
+        if (!exists) {
+            return Response.notFound("No language named " + name + " exists");
+        }
+
+        Language updatedLanguage = null;
+        for (Language item : this.languages) {
+            if (item.getName().equals(name)) {
+                this.languages.remove(item);
+
+                updatedLanguage = new Language(body.getName());
+                this.languages.add(updatedLanguage);
+                break;
+            }
+        }
+        return updatedLanguage;
+    }
 }
