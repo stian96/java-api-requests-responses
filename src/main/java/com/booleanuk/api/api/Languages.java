@@ -1,7 +1,7 @@
 package com.booleanuk.api.api;
 
+import com.booleanuk.api.Response;
 import com.booleanuk.api.requests.Language;
-import com.booleanuk.api.requests.Student;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,5 +27,18 @@ public class Languages {
     @ResponseStatus(HttpStatus.OK)
     public List<Language> getAll() {
         return this.languages;
+    }
+
+    @GetMapping("/{name}")
+    @ResponseStatus(HttpStatus.OK)
+    public Object getLanguageByName(@PathVariable String name) {
+        Language language = null;
+        for (Language item : this.languages) {
+            if (item.getName().equals(name)) {
+                language = item;
+                break;
+            }
+        }
+        return language != null ? language : Response.notFound("No language with name " + name + " exists.");
     }
 }
