@@ -4,7 +4,6 @@ package com.booleanuk.api.api;
 import com.booleanuk.api.Response;
 import com.booleanuk.api.requests.Book;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -69,7 +68,25 @@ public class Books {
                 item.setNumPages(book.getNumPages());
             }
         }
+        return book;
+    }
 
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Object deleteBookById(@PathVariable int id) {
+        boolean exists = this.books.stream().anyMatch(b -> b.getId() == id);
+        if (!exists) {
+            return Response.notFound("No book found for id: " + id);
+        }
+
+        Book book = null;
+        for (Book item : this.books) {
+            if (item.getId() == id) {
+                book = item;
+                this.books.remove(item);
+                break;
+            }
+        }
         return book;
     }
 }
