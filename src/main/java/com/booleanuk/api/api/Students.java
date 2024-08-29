@@ -62,4 +62,26 @@ public class Students {
         }
         return updatedStudent;
     }
+
+    @DeleteMapping("/{firstName}")
+    @ResponseStatus(HttpStatus.OK)
+    public Object deleteStudent(@PathVariable String firstName) {
+        boolean exists = this.students.stream().anyMatch(s -> s.firstName().equals(firstName));
+        if (!exists) {
+            return Response.notFound("No student named " + firstName + " exists");
+        }
+
+        Student deletedStudent = null;
+        for (Student item : this.students) {
+
+            if (item.firstName().equals(firstName)) {
+                deletedStudent = item;
+                this.students.remove(item);
+                break;
+
+            }
+        }
+
+        return deletedStudent;
+    }
 }
