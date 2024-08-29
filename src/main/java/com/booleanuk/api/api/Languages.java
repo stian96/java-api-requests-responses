@@ -2,6 +2,7 @@ package com.booleanuk.api.api;
 
 import com.booleanuk.api.Response;
 import com.booleanuk.api.requests.Language;
+import com.booleanuk.api.requests.Student;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -61,5 +62,27 @@ public class Languages {
             }
         }
         return updatedLanguage;
+    }
+
+    @DeleteMapping("/{name}")
+    @ResponseStatus(HttpStatus.OK)
+    public Object deleteLanguage(@PathVariable String name) {
+        boolean exists = this.languages.stream().anyMatch(l -> l.getName().equals(name));
+        if (!exists) {
+            return Response.notFound("No language named " + name + " exists");
+        }
+
+        Language deletedLanguage = null;
+        for (Language item : this.languages) {
+
+            if (item.getName().equals(name)) {
+                deletedLanguage = item;
+                this.languages.remove(item);
+                break;
+
+            }
+        }
+
+        return deletedLanguage;
     }
 }
