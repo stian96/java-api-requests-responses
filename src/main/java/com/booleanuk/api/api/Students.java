@@ -1,5 +1,6 @@
 package com.booleanuk.api.api;
 
+import com.booleanuk.api.Response;
 import com.booleanuk.api.requests.Student;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -38,10 +39,6 @@ public class Students {
                 break;
             }
         }
-
-        String errorMessage = "No student with named " + firstName + " exists";
-        ResponseStatusException error = new ResponseStatusException(HttpStatus.NOT_FOUND, errorMessage);
-
-        return student != null ? student : error;
+        return student != null ? student : Response.notFound("No student with named " + firstName + " exists");
     }
 }
