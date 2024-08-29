@@ -22,4 +22,10 @@ public class Languages {
         this.languages.add(language);
         return language;
     }
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<Language> getAll() {
+        return this.languages;
+    }
 }
